@@ -57,6 +57,8 @@ paths:
                 }
   /{dataset}/{version}/fields:
     get:
+      security:
+      - firebase: []
       tags:
         - metadata
       summary: >-
@@ -170,16 +172,18 @@ components:
   securitySchemes:
     firebase:    # <---- arbitrary name
       type: oauth2
-      description: This API uses OAuth 2 with the implicit grant flow. [More info](https://api.example.com/docs/auth)
-      flows:
-        implicit:   # <---- OAuth flow(authorizationCode, implicit, password or clientCredentials)
-          authorizationUrl: ""
-          x-google-issuer: "https://securetoken.google.com/paqio-app"
-          x-google-jwks_uri: "https://www.googleapis.com/service_accounts/v1/metadata/x509/securetoken@system.gserviceaccount.com"
+      flows: 
+        implicit:
+          authorizationUrl: https://example.com/api/oauth/dialog
           scopes:
-            read: Grants read access
-            write: Grants write access
-            admin: Grants access to admin operations
+            write:pets: modify pets in your account
+            read:pets: read your pets
+        authorizationCode:
+          authorizationUrl: https://example.com/api/oauth/dialog
+          tokenUrl: https://example.com/api/oauth/token
+          scopes:
+            write:pets: modify pets in your account
+            read:pets: read your pets 
     # firebase:
     #   authorizationUrl: ""
     #   flow: "implicit"
@@ -214,5 +218,3 @@ components:
               apiDocumentationUrl:
                 type: string
                 format: uriref
-security:
-  - firebase: []
